@@ -63,12 +63,32 @@ def main():
 # =============================================================================
 def sweep_path(msg_in):
 
+    r = rospy.Rate(1)   # Declare command frequency
     # TODO: Send simple angle waypoints on joint_angles_desired topic
 
     # Send SweeperActive (so mobrob stops)
+    pub_sweeper_active.publish(True)
     # Check global motion bool (if false, proceed)
     # Send set of waypoints with required timings and angles
+    neutral = np.array([0., -np.pi/2., np.pi/2., 0., 0., 0.])
+
+    sweep_points = np.array([
+        neutral,
+        [rotR, 0., 0., 0., 0., 0.],
+        [0., down, 0., 0., 0., 0.],
+        [rotL, 0., 0., 0., 0., 0.],
+        [0., up, 0., 0., 0., 0.],
+        neutral])
+
+    for i in range(0, sweep_points.length):
+        cmds = sweep_points[i]  # find next waypoint
+        joint_angles_desired_msg.position = cmds 
+        joint_angles_desired_msg.header.stamp = rospy.Time.now()
+        pub_joint_angles.publish(joint_angles_desired_msg)  # publish waypoint to arm
+        r.sleep()   # sleep for 1 second
+    
     # Set sweeper_active false
+    pub_sweeper_active.publish(False)
 
 def updateMotion(msg_in):
 
