@@ -10,6 +10,7 @@ from mobrob_util.msg import ME439WaypointXY, ME439PathSpecs
 from geometry_msgs.msg import Pose2D
 from std_msgs.msg import Bool
 
+
 # Get the parameter that determines how close to a waypoint the robot must be to call it "arrived". 
 waypoint_tolerance = rospy.get_param('/waypoint_tolerance') 
 
@@ -54,6 +55,8 @@ def talker():
     # Subscriber to the "waypoint_xy" topic
     sub_waypoint = rospy.Subscriber('/waypoint_xy', ME439WaypointXY, set_waypoint)
 ####    CODE END  
+
+    sub_motion = rospy.Subscriber('/mobrob_in_motion', bool, callback()) #TODO EDIT CALLBACK FUNCTION
 
     # Prevent the node from exiting
     rospy.spin()    
