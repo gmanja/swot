@@ -9,12 +9,12 @@
     <node pkg="mobrob" name="sensors_processing_node" type="sensors_processing.py"/>
   </group>
 
-
+<!--
   <group ns="robot_simulate">
     <node pkg="mobrob" name="robot_simulator" type="mobile_robot_kinematic_simulator.py"/>
     <node pkg="mobrob" name="robot_animator" type="mobile_robot_animator.py"/>
   </group>
-
+-->
 
  <!-- New Group called "robot_estimate" to estimate the robot's location based only on sensor data. --> 
  <!-- In this group, launch the "dead_reckoning" node and another "animator" to draw where the robot thinks it is. -->
@@ -35,5 +35,9 @@
     <node pkg="mobrob" name="set_waypoints" type="set_waypoints.py"/>
   </group>
   
+  <!-- New group called "robot_sweep" to launch all robot arm associated nodes -->
+  <group ns="robot_sweep">
+    <node pkg="mobrob" name="sweeper_control" type="sweeper_control.py" />
+  </group>
   
 </launch>
