@@ -51,7 +51,7 @@ def main():
     # =============================================================================
     rospy.init_node('sweeper_node', anonymous=False)
     
-    # Set up subscribers that listens to "sensors_data_processed" and "mobrob_motion"
+    # Set up subscribers that listen to "sensors_data_processed" and "mobrob_motion"
     sub_sensor_data = rospy.Subscriber('/sensors_data_processed', ME439SensorsProcessed, sweep_path)
     sub_mobrob_inmotion = rospy.Subscriber('/mobrob_motion', bool, updateMotion)
     
