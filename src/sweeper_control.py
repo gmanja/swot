@@ -32,7 +32,8 @@ f_interp_rad_to_us_34_params = interpolate.interp1d(map_ang_rad_34, map_cmd_us_3
 f_interp_rad_to_us_45_params = interpolate.interp1d(map_ang_rad_45, map_cmd_us_45)
 f_interp_rad_to_us_56_params = interpolate.interp1d(map_ang_rad_56, map_cmd_us_56)
 
-minDistance = 500   # How far away object has to be in order to trigger sweep.
+# Detection range is 12 to 60+, sensor can view conic region, to prevent contact before it leaves cone must sweep around 16 distance.
+minDistance = 18   # How far away object has to be in order to trigger sweep.
 
 InMotion = False
 
