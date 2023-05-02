@@ -81,10 +81,10 @@ def sweep_path(msg_in):
 
         sweep_points = np.array([
             neutral,
-            [rotR, 0., 0., 0., 0., 0.],
-            [0., down, 0., 0., 0., 0.],
-            [rotL, 0., 0., 0., 0., 0.],
-            [0., up, 0., 0., 0., 0.],
+            [np.radians(-60), 0., np.pi/2., 0., 0., 0.],
+            [0., -np.pi/4., np.pi/2., 0., 0., 0.],
+            [np.radians(60), 0., np.pi/2., 0., 0., 0.],
+            [0., -np.pi/2., np.pi/2., 0., 0., 0.],
             neutral])
 
         for i in range(0, sweep_points.length):
