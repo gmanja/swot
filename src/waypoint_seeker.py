@@ -56,7 +56,7 @@ def talker():
     sub_waypoint = rospy.Subscriber('/waypoint_xy', ME439WaypointXY, set_waypoint)
 ####    CODE END  
 
-    sub_motion = rospy.Subscriber('/mobrob_in_motion', bool, callback()) #TODO EDIT CALLBACK FUNCTION
+    sub_motion = rospy.Subscriber('/mobrob_in_motion', Bool, callback) #TODO EDIT CALLBACK FUNCTION
 
     # Prevent the node from exiting
     rospy.spin()    
@@ -113,7 +113,10 @@ def set_waypoint(waypoint_msg_in):
     waypoint_complete.data = False
 #    pub_waypoint_complete.publish(waypoint_complete)
 
-        
+def callback(msg_in):
+    global waypoint, waypoint_complete, estimated_pose
+    waypoint = estimated_pose
+
     
 
 if __name__ == '__main__':

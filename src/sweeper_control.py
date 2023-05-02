@@ -7,6 +7,8 @@ from scipy import interpolate
 # IMPORT the messages: 
 from sensor_msgs.msg import JointState
 from mobrob_util.msg import ME439SensorsProcessed
+from std_msgs.msg import Bool
+
 
 # Load parameters from rosparam to keep handy for the functions below: 
 # Matched lists of angles and microsecond commands
@@ -32,9 +34,11 @@ f_interp_rad_to_us_56_params = interpolate.interp1d(map_ang_rad_56, map_cmd_us_5
 
 minDistance = 500   # How far away object has to be in order to trigger sweep.
 
+InMotion = False
+
 # Set up publisher that listens to "joint_angles_desired"
 pub_joint_angles = rospy.Publisher('/joint_angles_desired', JointState, queue_size=1)
-pub_sweeper_active = rospy.Subscriber('/armrob_sweeper_active', bool, queue_size=1)
+pub_sweeper_active = rospy.Subscriber('/armrob_sweeper_active', Bool, queue_size=1)
 
 # Create the message
 cmds = [0., -np.pi/2., np.pi/2., 0., 0., 0.]
@@ -72,7 +76,7 @@ def sweep_path(msg_in):
     pub_sweeper_active.publish(True)
 
     # Check global motion bool (if false, proceed)
-    sub_mobrob_inmotion = rospy.Subscriber('/mobrob_motion', bool, updateMotion)
+    sub_mobrob_inmotion = rospy.Subscriber('/mobrob_motion', Bool, updateMotion)
     while(InMotion != False):
 
         # Send set of waypoints with required timings and angles
@@ -98,7 +102,8 @@ def sweep_path(msg_in):
         pub_sweeper_active.publish(False)   # Keep inside the while, but not the For!
 
 def updateMotion(msg_in):
-
+    global InMotion
+    InMotion = msg_in
     # TODO: Change global variable to match topic msg.
 
 if __name__ == "__main__":

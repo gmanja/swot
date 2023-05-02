@@ -1,8 +1,10 @@
 <launch> 
   <rosparam command="load" file="$(find mobrob_util)/src/robot_info.yaml" />
   <!-- Add a parameter that finds the SVG file with the path to follow. You can change the path file by entering its name. --> 
-  <param name="path_file_svg" value="$(find mobrob)/src/swot_path.svg" />
-
+  <param name="path_file_svg" value="$(find swot)/src/swot_path.svg" />
+  
+  <rosparam command="load" file="$(find armrob_util)/src/robot_arm_info.yaml" />
+  
   <group ns="robot_operate">
     <node pkg="swot" name="sensing_node" type="sensing_node.py"/>
     <node pkg="mobrob" name="wheel_control_node" type="wheel_control_node.py"/>
