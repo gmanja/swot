@@ -9,24 +9,11 @@
     <node pkg="swot" name="sensors_processing_node" type="sensors_processing.py"/>
   </group>
 
-<!--
-  <group ns="robot_simulate">
-    <node pkg="mobrob" name="robot_simulator" type="mobile_robot_kinematic_simulator.py"/>
-    <node pkg="mobrob" name="robot_animator" type="mobile_robot_animator.py"/>
-  </group>
--->
-
  <!-- New Group called "robot_estimate" to estimate the robot's location based only on sensor data. --> 
  <!-- In this group, launch the "dead_reckoning" node and another "animator" to draw where the robot thinks it is. -->
   <group ns="robot_estimate">
     <!-- first a "dead reckoning" node -->
     <node pkg="mobrob" name="dead_reckoning" type="dead_reckoning.py" />
-    
-    <!-- then an "animator" node, but remapped to make it subscribe to "/robot_pose_estimated" instead of "/robot_pose_simulated"  -->
-    <node pkg="mobrob" name="dead_reckoning_animator" type="mobile_robot_animator.py" >
-        <remap from="/robot_pose_simulated" to="/robot_pose_estimated"/>    
-    </node>
-  </group>
 
  <!-- Edit the "robot_control" group to launch the "closed_loop_path_follower.py", "waypoint_seeker.py" and "set_waypoints.py" nodes. --> 
   <group ns="robot_control">
