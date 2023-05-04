@@ -7,7 +7,7 @@
   
   <group ns="robot_operate">
     <node pkg="swot" name="sensing_node" type="sensing_node.py"/>
-    <node pkg="mobrob" name="wheel_control_node" type="wheel_control_node.py"/>
+    <!-- <node pkg="mobrob" name="wheel_control_node" type="wheel_control_node.py"/> -->
     <node pkg="swot" name="sensors_processing_node" type="sensors_processing.py"/>
   </group>
 

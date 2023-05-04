@@ -39,7 +39,7 @@ InMotion = False
 
 # Set up publisher that listens to "joint_angles_desired"
 pub_joint_angles = rospy.Publisher('/joint_angles_desired', JointState, queue_size=1)
-pub_sweeper_active = rospy.Subscriber('/armrob_sweeper_active', Bool, queue_size=1)
+pub_sweeper_active = rospy.Publisher('/armrob_sweeper_active', Bool, queue_size=1)
 
 # Create the message
 cmds = [0., -np.pi/2., np.pi/2., 0., 0., 0.]
@@ -77,7 +77,7 @@ def sweep_path(msg_in):
     pub_sweeper_active.publish(True)
 
     # Check global motion bool (if false, proceed)
-    sub_mobrob_inmotion = rospy.Subscriber('/mobrob_motion', Bool, updateMotion)
+    sub_mobrob_inmotion = rospy.Subscriber('/mobrob_in_motion', Bool, updateMotion)
     while(InMotion != False):
 
         # Send set of waypoints with required timings and angles

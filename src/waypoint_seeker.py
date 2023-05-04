@@ -37,6 +37,9 @@ waypoint_complete.data = False
 # Create the publisher. Name the topic "path_segment_spec", with message type "ME439PathSpecs"
 pub_segment_specs = rospy.Publisher('/path_segment_spec', ME439PathSpecs, queue_size=1)
 
+# Create the publisher to notify arm of mobrob motion.
+pub_motion = rospy.Publisher('/mobrob_in_motion', Bool, queue_size=1)
+
 # Create the publisher for the topic "waypoint_complete", with message type "Bool"
 pub_waypoint_complete = rospy.Publisher('/waypoint_complete', Bool, queue_size=1)
 ####    CODE END
@@ -56,7 +59,7 @@ def talker():
     sub_waypoint = rospy.Subscriber('/waypoint_xy', ME439WaypointXY, set_waypoint)
 ####    CODE END  
 
-    sub_motion = rospy.Subscriber('/mobrob_in_motion', Bool, callback) #TODO EDIT CALLBACK FUNCTION
+    sub_sweeper = rospy.Subscriber('/armrob_sweeper_active', Bool, callback) #TODO EDIT CALLBACK FUNCTION
 
     # Prevent the node from exiting
     rospy.spin()    
