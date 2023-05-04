@@ -119,7 +119,10 @@ def set_waypoint(waypoint_msg_in):
 def callback(msg_in):
     global waypoint, waypoint_complete, estimated_pose
     waypoint = estimated_pose
-
+    if msg_in.data:  # If sweeper active true
+        pub_motion.publish(False)
+    else:
+        pub_motion.publish(False)
     
 
 if __name__ == '__main__':

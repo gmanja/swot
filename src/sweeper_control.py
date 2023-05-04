@@ -34,6 +34,7 @@ f_interp_rad_to_us_56_params = interpolate.interp1d(map_ang_rad_56, map_cmd_us_5
 
 # Detection range is 12 to 60+, sensor can view conic region, to prevent contact before it leaves cone must sweep around 16 distance.
 minDistance = 18   # How far away object has to be in order to trigger sweep.
+justRan = 0
 
 InMotion = False
 
@@ -55,9 +56,17 @@ def main():
     #     # Launch a node called "command_arm"
     # =============================================================================
     rospy.init_node('sweeper_node', anonymous=False)
-    
+    global justRan, joint_angles_desired_msg, cmds
+    R = rospy.Rate(5)
     # Set up subscribers that listen to "sensors_data_processed"
-    sub_sensor_data = rospy.Subscriber('/sensors_data_processed', ME439SensorsProcessed, sweep_path)
+    if(justRan <= 0):
+        justRan = 0
+        sub_sensor_data = rospy.Subscriber('/sensors_data_processed', ME439SensorsProcessed, sweep_path)
+    else:
+        joint_angles_desired_msg.position = cmds
+        pub_joint_angles.publish(joint_angles_desired_msg)
+        justRan -= 1
+        R.sleep()
     
     rospy.spin()
 
@@ -67,7 +76,7 @@ def main():
 # =============================================================================
 def sweep_path(msg_in):
 
-    global InMotion
+    global InMotion, justRan
     # Check if object close enough to sweep
     if(msg_in.a0 > minDistance):
         return
@@ -76,30 +85,37 @@ def sweep_path(msg_in):
 
     # Send SweeperActive (so mobrob stops)
     pub_sweeper_active.publish(True)
-
+    
     # Check global motion bool (if false, proceed)
     sub_mobrob_inmotion = rospy.Subscriber('/mobrob_in_motion', Bool, updateMotion)
-    while(InMotion != False):
+    if(InMotion == False):
 
         # Send set of waypoints with required timings and angles
         # These are absolute position angles, not relative. Robot will go to this angle, not travel by this much!
-        neutral = np.array([0., -np.pi/2., np.pi/2., 0., 0., 0.])
+        #neutral = np.array([0., -np.pi/2., np.pi/2., 0., 0., 0.])
+
+        right = np.radians(-60)
+        left  = np.radians(60)
+        up    = -np.pi/2.
+        down  = -np.pi/6.
+        spin  = np.pi/2
+        wrist = np.pi/6
 
         sweep_points = np.array([
-            neutral,
-            [np.radians(-60), 0., np.pi/2., 0., 0., 0.],
-            [0., -np.pi/4., np.pi/2., 0., 0., 0.],
-            [np.radians(60), 0., np.pi/2., 0., 0., 0.],
-            [0., -np.pi/2., np.pi/2., 0., 0., 0.],
-            neutral])
+            [0.,    up,   np.pi/2., 0., wrist, -spin],    # start neutral
+            [right, up,   np.pi/2., 0., wrist, -spin],    # turn right
+            [right, down, np.pi/2., 0., wrist, -spin],    # go down
+            [left,  down, np.pi/2., 0., wrist,  spin],    # turn left
+            [left,  up,   np.pi/2., 0., wrist,  spin],    # back up
+            [0.,    up,   np.pi/2., 0., wrist,  spin]])   # return to netural
 
-        for i in range(0, sweep_points.length):
+        for i in range(0, 6):
             cmds = sweep_points[i]  # find next waypoint
             joint_angles_desired_msg.position = cmds 
             joint_angles_desired_msg.header.stamp = rospy.Time.now()
             pub_joint_angles.publish(joint_angles_desired_msg)  # publish waypoint to arm
             r.sleep()   # sleep for 1 second
-
+        justRan = 5
         # Set sweeper_active false at the end of loop
         pub_sweeper_active.publish(False)   # Keep inside the while, but not the For!
 
