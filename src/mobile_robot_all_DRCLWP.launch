@@ -40,6 +40,7 @@
   <!-- New group called "robot_sweep" to launch all robot arm associated nodes -->
   <group ns="robot_sweep">
     <node pkg="swot" name="sweeper_control" type="sweeper_control.py" />
+    <node pkg="swot" name="arm_control" type="command_arm.py" />
   </group>
   
 </launch>
