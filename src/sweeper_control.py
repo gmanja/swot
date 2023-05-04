@@ -67,8 +67,9 @@ def main():
 # =============================================================================
 def sweep_path(msg_in):
 
+    global InMotion
     # Check if object close enough to sweep
-    if(msg_in.a0 < minDistance):
+    if(msg_in.a0 > minDistance):
         return
     r = rospy.Rate(1)   # Declare command frequency
     # TODO: Send simple angle waypoints on joint_angles_desired topic
