@@ -105,7 +105,7 @@ def sweep_path(msg_in):
 
 def updateMotion(msg_in):
     global InMotion
-    InMotion = msg_in
+    InMotion = msg_in.data
     # TODO: Change global variable to match topic msg.
 
 if __name__ == "__main__":
