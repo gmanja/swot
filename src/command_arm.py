@@ -7,7 +7,7 @@ from scipy import interpolate
 # IMPORT the messages: 
 from sensor_msgs.msg import JointState
 # IMPORT the custom arm model 
-import arm_model 
+
 
 
 # Try to set up the PCA9685 PWM chip to command the servos. 
@@ -143,14 +143,6 @@ def move_servos_and_set_joint_state(msg_in):
         command_servo(4,np.int(cmd_us_04))    
         command_servo(5,np.int(cmd_us_05))    
 
-    global joint_state_msg
-    try:
-        joint_state_msg.position = arm_model.convert_servo_commands_to_joint_state(cmd_all, arm_is_present)
-        joint_state_msg.name = ['base_joint', 'shoulder_joint', 'elbow_joint', 'forearm_joint', 'wrist_joint', 'fingers_joint']
-        joint_state_msg.header.stamp = rospy.Time.now()
-        pub_joint_states.publish(joint_state_msg)
-    except: 
-        rospy.logerr('ERROR: Value out of range. Not Publishing Joint State.')
         
     
     
